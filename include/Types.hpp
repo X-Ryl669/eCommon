@@ -40,6 +40,8 @@ static inline T max(T a, T b) { return a > b ? a : b; }
     @return a if a is > m and < M, m if it's <= m and M if it's >= M */
 template <typename T>
 static inline T clamp(T a, T m, T M) { return a < m ? m : (a > M ? M : a); }
+/** Swap the given two values */
+template <typename T> inline void swap(T & a, T & b) { T tmp = a; a = b; b = tmp; }
 /** Useful lookup in a static array */
 template <typename T, size_t N >
 inline bool isInArray(const T & a, T (&arr)[N]) { for(size_t i = 0; i < N; i++) if (arr[i] == a) return true; return false; }
@@ -47,14 +49,17 @@ inline bool isInArray(const T & a, T (&arr)[N]) { for(size_t i = 0; i < N; i++) 
 
 // The deleters helpers
 /** Delete and zero the pointer */
-template <typename T>
-inline void delete0(T*& t) { delete t; t = 0; }
+template <typename T> inline void delete0(T*& t) { delete t; t = 0; }
 /** Delete array and zero the pointer */
-template <typename T>
-inline void deleteA0(T*& t) { delete[] t; t = 0; }
+template <typename T> inline void deleteA0(T*& t) { delete[] t; t = 0; }
 /** Free and zero the pointer */
-template <typename T>
-inline void free0(T*& t) { free(t); t = 0; }
+template <typename T> inline void free0(T*& t) { free(t); t = 0; }
+/** Delete a pointer to an array, zero it, and zero the elements count too */
+template <typename T, typename U> inline void deleteA0(T*& t, U & size) { delete[] t; t = 0; size = 0; }
+/** Delete all items of an array, delete the array, zero it, and zero the elements count too */
+template <typename T, typename U> inline void deleteArray0(T*& t, U & size) { for (U i = 0; i < size; i++) delete t[i]; delete[] t; t = 0; size = 0; }
+/** Delete all array items of an array, delete the array, zero it, and zero the elements count too */
+template <typename T, typename U> inline void deleteArrayA0(T*& t, U & size) { for (U i = 0; i < size; i++) delete[] t[i]; delete[] t; t = 0; size = 0; }
 
 
 /** Divide by a (power of 2) - 1 with no actual division
